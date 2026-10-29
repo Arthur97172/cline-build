@@ -4,6 +4,11 @@ name: Build musl binaries
 # best-effort and can start minutes late; the run is cheap when there is
 # nothing new, so lateness does not matter.
 on:
+  # A change to the build scripts or the patch should test itself; the release
+  # step is skipped when the version already has a release, so this costs a
+  # runner but never republishes.
+  push:
+    branches: [main]
   schedule:
     - cron: "0 21 * * *"
   workflow_dispatch:
