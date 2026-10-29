@@ -1,0 +1,13 @@
+cline-build
+
+The binaries published from this repository are compiled from
+https://github.com/cline/cline, which is licensed under the Apache License,
+Version 2.0. A copy of that license is published with every release.
+
+They are unofficial builds: no musl targets exist upstream at the time of
+writing (cline/cline#15271), and the compilation is done here by applying
+patches/opentui-musl-libc.patch to an upstream release tag. They are not
+endorsed, supported or distributed by the Cline project.
+
+The build scripts in this repository are provided under the same Apache-2.0
+terms unless stated otherwise in a file.

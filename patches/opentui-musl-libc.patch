@@ -1,0 +1,16 @@
+--- a/apps/cli/script/compile-binary.ts
++++ b/apps/cli/script/compile-binary.ts
+@@ -146,6 +146,13 @@
+ 					`${bunfsRoot}plugin-runtime`,
+ 				),
+ 				__CLINE_DASHBOARD_RUNTIME_DIR__: JSON.stringify(`${bunfsRoot}webview`),
++				// OpenTUI selects its native library from OPENTUI_LIBC at runtime and
++				// defaults to glibc; a musl build would load the glibc one and die in
++				// the loader. A compiled binary cannot be re-pointed afterwards, so
++				// the target libc is baked in here.
++				...(input.bunTarget.includes("-musl")
++					? { "process.env.OPENTUI_LIBC": JSON.stringify("musl") }
++					: {}),
+ 				// Inline telemetry/OTEL env vars at build time so the compiled
+ 				// binary ships with production telemetry configuration baked in.
+ 				...buildInlinedEnvDefines(),
