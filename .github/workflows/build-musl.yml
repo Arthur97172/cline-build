@@ -55,7 +55,10 @@ jobs:
           FORCE: ${{ inputs.force }}
         run: |
           set -eu
-          VERSION="${REQUESTED:-$(curl -fsSL https://registry.npmjs.org/@cline/cli/latest | jq -r .version)}"
+          # The published CLI is the `cline` package; @cline/cli is a placeholder on
+          # npm (0.0.13) whose name matches the workspace package inside the
+          # repository, not what users install.
+          VERSION="${REQUESTED:-$(curl -fsSL https://registry.npmjs.org/cline/latest | jq -r .version)}"
           case "$VERSION" in
             *[!0-9A-Za-z.-]*|'') echo "implausible version: '$VERSION'" >&2; exit 1 ;;
           esac
@@ -95,6 +98,21 @@ jobs:
       # The one source change a musl build needs. It is applied by an anchored
       # insertion so upstream moving the code around fails here, loudly, rather
       # than producing a glibc binary under a musl name.
+      # The npm version and the source version are two numbers that can drift
+      # apart between the publish and the tag landing; a mismatch here means
+      # the tag is not what npm calls that version.
+      - name: Check the tag's version
+        if: steps.version.outputs.skip != 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -eu
+          got="$(jq -r .version cline/apps/cli/package.json)"
+          if [ "$got" != "$VERSION" ]; then
+            echo "apps/cli/package.json says $got, expected $VERSION" >&2
+            exit 1
+          fi
+
       - name: Apply the musl libc patch
         if: steps.version.outputs.skip != 'true'
         run: node scripts/patch-cline.mjs cline

@@ -111,7 +111,8 @@ writeFileSync(
 	join(out, "manifest.json"),
 	JSON.stringify(
 		{
-			package: "@cline/cli",
+			package: "cline",
+			workspace: "@cline/cli",
 			version,
 			upstream_tag: tag,
 			upstream_commit: commit,

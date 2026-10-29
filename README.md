@@ -49,7 +49,7 @@ https://github.com/Arthur97172/cline-build/releases/latest/download/cli-linux-ar
 ## 自动构建
 
 - 每天 **05:00（Asia/Shanghai，cron `0 21 * * *` UTC）** 运行一次。
-- 先查 npm 上 `@cline/cli` 的最新版本；该版本已发布过就直接跳过。**每天检查，
+- 先查 npm 上 `cline` 包的最新版本；该版本已发布过就直接跳过。**每天检查，
   按版本发布**——不是每天一个 release。
 - 只从上游 tag（`cli-v<version>`）构建，绝不构建 `main`。
 - x64 二进制在 Alpine 容器里做一次 `--version` 冒烟；arm64 由真实设备验证。
